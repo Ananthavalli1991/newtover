@@ -1,7 +1,9 @@
+!pip install fastapi uvicorn pandas
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+import uvicorn
+import asyncio
 app = FastAPI()
 
 # Enable CORS
