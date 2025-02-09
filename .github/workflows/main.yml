@@ -13,6 +13,11 @@ jobs:
 
       - name: Make a change
         run: echo "Daily update at $(date)" >> update.txt
+      - name: Create Timestamp File
+        run: |
+          date > timestamp.txt
+          git config --global user.email "23f1001029@ds.study.iitm.ac.in"
+          git config --global user.name "GitHub Actions"
 
       - name: Commit changes 23f1001029@ds.study.iitm.ac.in
         run: |
