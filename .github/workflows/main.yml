@@ -22,7 +22,7 @@ jobs:
           git add timestamp.txt
           git commit -m "Daily commit $(date)"
           git push origin main
- - name: Verify Commit within 5 Minutes
+      - name: Verify Commit within 5 Minutes
         run: |
           # Get the workflow run ID
           WORKFLOW_RUN_ID=$(echo "${GITHUB_RUN_ID}")
