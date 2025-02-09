@@ -1,0 +1,50 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '0 10 * * *' # Runs every day at 10:00 AM UTC
+
+jobs:
+  daily_commit_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 23f1001029@ds.study.iitm.ac.in - Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 23f1001029@ds.study.iitm.ac.in - Create Timestamp File
+        run: |
+          date > timestamp.txt
+          git config --global user.email "23f1001029@ds.study.iitm.ac.in"
+          git config --global user.name "GitHub Actions"
+
+      - name: 23f1001029@ds.study.iitm.ac.in - Commit Changes
+        run: |
+          git add timestamp.txt
+          git commit -m "Daily commit $(date)"
+          git push origin main
+ - name: Verify Commit within 5 Minutes
+        run: |
+          # Get the workflow run ID
+          WORKFLOW_RUN_ID=$(echo "${GITHUB_RUN_ID}")
+
+          # Get the commit SHA of the latest commit pushed by this workflow run
+          COMMIT_SHA=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${WORKFLOW_RUN_ID}/jobs" | jq -r '.jobs[] | select(.name == "23f1001029@ds.study.iitm.ac.in - Commit Changes") | .steps[] | select(.name == "23f1001029@ds.study.iitm.ac.in - Commit Changes") | .conclusion | .head_sha')
+          # Alternative to get commit SHA:
+          # COMMIT_SHA=$(git log -1 --pretty=format:"%H")
+
+          # Get the timestamp of the commit
+          COMMIT_TIMESTAMP=$(git show -s --format=%ct $COMMIT_SHA)
+
+          # Get the workflow run started time
+          WORKFLOW_START_TIME=$(echo "${GITHUB_RUN_ATTEMPT}") #use attempt as it is the closest to when the job starts
+
+          # Calculate the difference in seconds
+          TIME_DIFF=$(( $COMMIT_TIMESTAMP - $WORKFLOW_START_TIME ))
+
+          # Check if the time difference is within 5 minutes (300 seconds)
+          if [[ $TIME_DIFF -lt 300 && $TIME_DIFF -ge 0 ]] ; then
+             echo "Commit created successfully within 5 minutes of workflow run."
+          else
+            echo "Error: Commit was not created within 5 minutes of workflow run or there was an error getting commit timestamp or run timestamp."
+            exit 1
+          fi
