@@ -1,0 +1,24 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '0 10 * * *' # Runs every day at 10:00 AM UTC
+
+jobs:
+  daily_commit_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 23f1001029@ds.study.iitm.ac.in - Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 23f1001029@ds.study.iitm.ac.in - Create Timestamp File
+        run: |
+          date > timestamp.txt
+          git config --global user.email "23f1001029@ds.study.iitm.ac.in"
+          git config --global user.name "GitHub Actions"
+
+      - name: 23f1001029@ds.study.iitm.ac.in - Commit Changes
+        run: |
+          git add timestamp.txt
+          git commit -m "Daily commit $(date)"
+          git push origin main
